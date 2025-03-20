@@ -1,0 +1,116 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.coverage.*
+.cache/
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv/
+.env/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# FastAPI
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+*.sqlite3
+*.db
+postgres-data/
+
+# Ollama
+ollama_data/
+models/
+*.gguf
+*.bin
+
+# Weaviate
+weaviate-data/
+weaviate.json
+
+# SQLAlchemy and Alembic
+alembic/versions/*.pyc
+alembic.ini
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Frontend builds
+frontend/build/
+frontend/dist/
+static/
+www/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# API keys and secrets
+.env.local
+.env.development
+.env.test
+.env.production
+credentials.json
+secrets.json
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Vector embeddings
+embeddings/
+vector_store/
