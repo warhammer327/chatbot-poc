@@ -6,7 +6,7 @@ from datetime import datetime
 class ProductBase(BaseModel):
     name: str
     description: Optional[str] = None
-    prince: float
+    price: float
 
 
 class ProductCreate(ProductBase):
