@@ -72,7 +72,6 @@ weaviate.json
 
 # SQLAlchemy and Alembic
 alembic/versions/*.pyc
-alembic.ini
 
 # Logs
 logs/

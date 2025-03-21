@@ -22,6 +22,11 @@ postgres_port = os.environ.get("POSTGRES_PORT")
 if all([postgres_user, postgres_password, postgres_db, postgres_host, postgres_port]):
     db_url = f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}"
     config.set_main_option("sqlalchemy.url", db_url)
+else:
+    # Fallback to a default URL if environment variables are not set
+    config.set_main_option(
+        "sqlalchemy.url", "postgresql://postgres:postgres@localhost:5432/poc"
+    )
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
