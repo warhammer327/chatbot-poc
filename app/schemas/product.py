@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from datetime import datetime
 
 
 class ProductBase(BaseModel):
@@ -15,9 +14,7 @@ class ProductCreate(ProductBase):
 
 
 class ProductResponse(ProductBase):
-    id: int
-    created_at: datetime
-    updated_at: datetime
+    pass
 
     class Config:
         from_attributes = True
