@@ -4,7 +4,7 @@ from typing import List
 
 from app.database import get_db
 from app.models import Product
-from app.schemas import ProductCreate, ProductResponse
+from app.schemas.product import ProductCreate, ProductResponse
 
 app = FastAPI(title="chatbot")
 
@@ -23,6 +23,9 @@ def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 @app.post("/products/", response_model=ProductResponse)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     cur_product = Product(**product.dict())
+    print("--------------------")
+    print(cur_product)
+    print("--------------------")
     db.add(cur_product)
     db.commit()
     db.refresh(cur_product)
