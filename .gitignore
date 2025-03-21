@@ -62,7 +62,6 @@ postgres-data/
 
 # Ollama
 ollama_data/
-models/
 *.gguf
 *.bin
 
