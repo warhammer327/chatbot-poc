@@ -6,9 +6,11 @@ from io import StringIO
 import logging
 
 from app.database import get_db
-from app.models import Product, Customer
+from app.models import Product, Customer, PurchaseHistory
 from app.schemas.product import ProductResponse
 from app.schemas.customer import CustomerResponse
+from app.schemas.purchase_history import PurchaseHistoryResponse
+
 
 app = FastAPI(title="chatbot")
 
@@ -91,6 +93,54 @@ async def create_customer(file: UploadFile = File(...), db: Session = Depends(ge
                 zip_code=row["zip_code"],
             )
             db.add(customer)
+
+        db.commit()
+
+        return {"status_code": 200, "message": "success"}
+
+    except KeyError as e:
+        logging.error(f"Missing column in CSV: {e}")
+        raise HTTPException(status_code=400, detail=f"Missing column in CSV: {str(e)}")
+
+    except ValueError as e:
+        logging.error(f"Invalid data format: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid data format: {str(e)}")
+
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+@app.get(
+    "/purchase_histories/{purchase_history_id}", response_model=PurchaseHistoryResponse
+)
+def read_purchase_history(purchase_history_id: int, db: Session = Depends(get_db)):
+    purchase_history = (
+        db.query(PurchaseHistory)
+        .filter(PurchaseHistory.id == purchase_history_id)
+        .first()
+    )
+    if purchase_history is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return purchase_history
+
+
+@app.post("/purchase_histories/")
+async def create_purchase_history(
+    file: UploadFile = File(...), db: Session = Depends(get_db)
+):
+    try:
+        contents = await file.read()
+        decoded_file = pd.read_csv(StringIO(contents.decode("utf-8")))
+        for index, row in decoded_file.iterrows():
+            purchase_history = PurchaseHistory(
+                customer_id=row["customer_id"],
+                product_id=row["product_id"],
+                purchase_date=row["purchase_date"],
+                quantity=row["quantity"],
+                total_amount=row["total_amount"],
+            )
+            db.add(purchase_history)
 
         db.commit()
 
