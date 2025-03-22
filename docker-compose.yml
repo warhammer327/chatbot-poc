@@ -13,6 +13,8 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
     depends_on:
       - db
+      - ollama
+      - weaviate
 
   db:
     image: postgres:15
@@ -25,6 +27,28 @@ services:
     ports:
       - "5432:5432"
 
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  weaviate:
+    image: semitechnologies/weaviate:1.25.2
+    ports:
+      - "8087:8080"
+    environment:
+      - QUERY_DEFAULTS_LIMIT=20
+      - AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true
+      - PERSISTENCE_DATA_PATH=/var/lib/weaviate
+      - DEFAULT_VECTORIZER_MODULE=none
+      - CLUSTER_HOSTNAME=node1
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+ 
 volumes:
+  ollama_data:
   postgres_data:
+  weaviate_data:
 

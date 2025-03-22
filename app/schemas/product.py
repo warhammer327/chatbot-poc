@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-from typing import Optional
-from datetime import datetime
 
 
 class ProductBase(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
+    product_name: str
+    category: str
+    price_per_unit: float
+    brand: str
+    product_description: str
 
 
 class ProductCreate(ProductBase):
@@ -14,9 +14,7 @@ class ProductCreate(ProductBase):
 
 
 class ProductResponse(ProductBase):
-    id: int
-    created_at: datetime
-    upated_at: datetime
+    pass
 
     class Config:
         from_attributes = True
