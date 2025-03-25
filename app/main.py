@@ -4,6 +4,12 @@ from typing import List
 import pandas as pd
 from io import StringIO
 import logging
+import os
+
+import weaviate
+from weaviate.exceptions import WeaviateConnectionError
+from weaviate.classes.config import Configure
+from langchain_community.vectorstores import Weaviate
 
 from app.database import get_db
 from app.models import Product, Customer, PurchaseHistory
@@ -157,3 +163,41 @@ async def create_purchase_history(
     except Exception as e:
         logging.error(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
+@app.get("/check_weaviate")
+def connect_to_weaviate():
+    """
+    Establish an async connection to the Weaviate client running in Docker
+    and verify the connection
+    """
+    try:
+        client = weaviate.connect_to_local(
+            host="weaviate",  # Docker service name
+            port=8087,
+        )
+        # Attempt to check connection
+        try:
+            return {
+                "status": 200,
+                "message": "Successfully connected to Weaviate",
+                "is_ready": client.is_ready(),
+                # "meta_data": client.get_meta(),
+            }
+
+        except Exception as e:
+            logging.error(f"Weaviate connection or health check failed: {e}")
+            raise HTTPException(
+                status_code=500, detail=f"Weaviate health check failed: {str(e)}"
+            )
+
+    except WeaviateConnectionError as e:
+        logging.error(f"Failed to connect to Weaviate: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not establish connection to Weaviate: {str(e)}",
+        )
+
+    except Exception as e:
+        logging.error(f"Unexpected error connecting to Weaviate: {e}")
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
