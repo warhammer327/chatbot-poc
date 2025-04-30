@@ -35,18 +35,28 @@ services:
       - "11434:11434"
 
   weaviate:
-    image: semitechnologies/weaviate:1.25.2
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8087'
+      - --scheme
+      - http
+    image: cr.weaviate.io/semitechnologies/weaviate:latest
     ports:
-      - "8087:8080"
-    environment:
-      - QUERY_DEFAULTS_LIMIT=20
-      - AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true
-      - PERSISTENCE_DATA_PATH=/var/lib/weaviate
-      - DEFAULT_VECTORIZER_MODULE=none
-      - CLUSTER_HOSTNAME=node1
+      - 8087:8087
+      - 50051:50051
     volumes:
       - weaviate_data:/var/lib/weaviate
- 
+    restart: on-failure:0
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      ENABLE_API_BASED_MODULES: 'true'
+      ENABLE_MODULES: 'text2vec-ollama,generative-ollama'
+      CLUSTER_HOSTNAME: 'node1'
+
 volumes:
   ollama_data:
   postgres_data:
